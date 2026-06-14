@@ -1,9 +1,0 @@
-#creating first ubuntu VM from Proxmox shell 
-
-qm create 9000 --name ubuntu-shell \
-  --memory 4096 \
-  --cores 2 \
-  --net0 virtio,bridge=vmbr0,firewall=1 \
-  --ostype l26 \
-  --scsihw virtio-scsi-pci \
-  --scsi0 local-lvm:32
