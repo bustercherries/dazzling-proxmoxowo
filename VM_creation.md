@@ -18,11 +18,13 @@ qm destroy 6000
 # attaching ISO 
 qm set 6000 --cdrom local:iso/ubuntu-22.04.5-live-server-amd64.iso
 
-# enabling booting from ISO
+### enabling booting from ISO
 qm set 6000 --boot order=scsi0;ide2
 
-# start VM
+### start VM
 qm start 6000
 
-# after installation, detach ISO 
+### after installation, detach ISO 
 qm set 6000 --cdrom none
+
+###
