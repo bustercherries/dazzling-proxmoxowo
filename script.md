@@ -1,4 +1,4 @@
-#creating first ubuntu VM 
+#creating first ubuntu VM from Proxmox shell 
 
 qm create 9000 --name ubuntu-shell \
   --memory 4096 \
