@@ -21,12 +21,13 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub userapp@192.168.10.219
 echo "userapp ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/userapp
 
 ### one liner for disabling ssh 
-ssh userapp1@
+ssh userapp1@ip
 sudo vi etc/ssh/sshd_config
 #PermitRootLogin no
 sudo systemctl restart sshd
 
 # as it turns out permitrootlogin is a global variable
+# so this works out:
 ssh userapp@192.168.10.219 "echo 'DenyUsers userapp2' | sudo tee -a /etc/ssh/sshd_config && sudo systemctl restart sshd"
 
 # why this doesnt work?
