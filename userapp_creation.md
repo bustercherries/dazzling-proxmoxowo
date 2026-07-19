@@ -30,5 +30,5 @@ sudo systemctl restart sshd
 # so this works out:
 ssh userapp@192.168.10.219 "echo 'DenyUsers userapp2' | sudo tee -a /etc/ssh/sshd_config && sudo systemctl restart sshd"
 
-# why this doesnt work?
-ssh userapp@192.168.10.219 "echo 'DenyUsers userapp2' | sudo tee /etc/ssh/sshd_config.d/denyusers.conf && sudo systemctl restart sshd"
+
+ssh userapp@192.168.10.219 "echo 'DenyUsers userapp2' | sudo tee /etc/sshd_config.d/01_denyusers.conf && sudo systemctl reload sshd && sudo systemctl restart sshd"

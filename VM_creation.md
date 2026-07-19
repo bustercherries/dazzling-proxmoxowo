@@ -24,6 +24,8 @@ qm set 6000 --boot order=scsi0;ide2
 ### start VM
 qm start 6000
 
+### installation in progress via gui?
+
 ### after installation, detach ISO 
 qm set 6000 --cdrom none
 
