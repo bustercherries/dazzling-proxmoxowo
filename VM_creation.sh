@@ -2,8 +2,6 @@
 cd /var/lib/vz/template/iso
 wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
 
-### creating first ubuntu VM from Proxmox shell 
-
 
 ### VMs varibales
 VMID = 6000
@@ -47,4 +45,12 @@ qm start "$VMID"
 
 ### after installation, detach ISO 
 qm set "$VMID" --cdrom none
+
+### checking the status of newy created VM
+if [ "$(qm status "$VMID")" = "running" ]; then
+  echo "VM with ID $VMID is running."
+else
+  echo "VM with ID $VMID is not running, starting it now."
+  qm start "$VMID"
+fi
 
