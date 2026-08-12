@@ -1,15 +1,29 @@
+#!/bin/bash
+
+##in case of any error without pipeline, exit the script
+set -e
+
+## exit if there is unbound (unused) variable 
+set -u
+
 ### downloading the ISO from ubuntu page
+ISO_PATH="/var/lib/vz/template/iso/ubuntu-22.04.5-live-server-amd64.iso"
+mkdir -p /var/lib/vz/template/iso
 cd /var/lib/vz/template/iso
-wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
+if [ ! -f "$ISO_PATH" ]; then
+    wget https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
+else
+    echo "ISO already exists at $ISO_PATH"
+fi
 
 
 ### VMs varibales
-VMID = 6000
-VM_NAME = "$VMID VM"
-MEMORY = 2048
-CORES = 2
-BRIDGE = "vmbr0"
-STORAGE = "local-lvm"
+VMID=6000
+VM_NAME="$VMID-VM"
+MEMORY=2048
+CORES=2
+BRIDGE="vmbr0"
+STORAGE="local-lvm"
 
 
 ### check if VM exists
