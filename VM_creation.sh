@@ -28,7 +28,7 @@ STORAGE="local-lvm"
 
 ### check if VM exists
 vm_exists(){
-  qm status "$VMID" >/dev/null/ 2>$1
+  qm status "$VMID" >/dev/null/ 2>&1
 }
 
 if ! vm_exists; then
@@ -50,7 +50,7 @@ qm create "$VMID" --name "$VM_NAME" \
 qm set "$VMID" --cdrom local:iso/ubuntu-22.04.5-live-server-amd64.iso
 
 ### enabling booting from ISO
-qm set "$VMID" --boot order=scsi0;ide2
+qm set "$VMID" --boot "order=scsi0;ide2"
 
 ### start VM
 qm start "$VMID"
