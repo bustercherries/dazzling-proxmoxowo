@@ -4,7 +4,7 @@
 set -e
 
 ## exit if there is unbound (unused) variable 
-#set -u
+set -u
 
 ### downloading the ISO from ubuntu page
 ISO_PATH="/var/lib/vz/template/iso/ubuntu-22.04.5-live-server-amd64.iso"
@@ -17,11 +17,8 @@ else
 fi
 
 ### checking if its downloaded 
+echo "The list of downloaded isos: "
 pvesm list local --content iso
-
-### asking user for ID of VM
-#read -p "Enter the ID of new VM: " VMID
-
 
 ### VMs varibales
 VMID="$1"
@@ -65,7 +62,6 @@ else
 fi
 
 echo "VM $VMID started. Please proceed with the installation via the Proxmox web interface."
-# read -p "To detach ISO after installation of Ubuntu press Enter."
 
 ### installation in progress via gui?
 

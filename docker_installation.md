@@ -1,3 +1,4 @@
+
 # documentation: https://docs.docker.com/engine/install/ubuntu/
 
 ssh userapp@192.168.10.219 "sudo apt remove $(dpkg --get-selections docker.io docker-compose docker-compose-v2 docker-doc podman-docker containerd runc | cut -f1)"

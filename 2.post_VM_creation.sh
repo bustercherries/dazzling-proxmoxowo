@@ -7,24 +7,27 @@ set -e
 set -u
 
 ### Variables
+USERNAME="adminapp"
 
 ## 1. User app creation
-sudo apt install openssh-server
+### install the ssh service
+if ! dpkg --status openssh-server; then
+    sudo apt install openssh-server
+else 
+    echo "Openssh already installed"
+fi
+
+### userapp creation
+if ! id "$USERNAME"; then
+    echo "User $USERNAME cannot be found, creating it."
+    adduser --disabled-password --gecos "" $USERNAME
+    usermod -aG sudo $USERNAME
+    sudo mkdir -p /home/$USERNAME/.ssh
+    sudo chmod 700 /home/$USERNAME/.ssh
+else
+    echo "User $USERNAME already exits."
+fi
 
 ### 2. Install docker + compose
 ### 3. Set up Immich directory and files
 ## Move to the directory you created
-mkdir ./immich-app
-cd ./immich-app
-
-## Get docker-compose.yml file
-wget -O docker-compose.yml https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
-
-## Get .env file
-wget -O .env https://github.com/immich-app/immich/releases/latest/download/example.env
-
-### 4. Get docker-compose.yml and .env tempalte
-
-# Configure .env
-
-### Start immich
