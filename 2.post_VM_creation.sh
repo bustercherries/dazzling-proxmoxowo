@@ -84,32 +84,20 @@ sudo wget -O docker-compose.yml https://github.com/immich-app/immich/releases/la
 sudo wget -O .env https://github.com/immich-app/immich/releases/latest/download/example.env
 
 
-### STOPPED HERE
-
 # You can find documentation for all the supported env variables at https://docs.immich.app/install/environment-variables
 
-
 # The location where your uploaded files are stored
-UPLOAD_LOCATION=./home/userapp/immich-app/library
+UPLOAD_LOCATION="/opt/immich-app/library"
 sudo mkdir -p $UPLOAD_LOCATION
 
 # The location where your database files are stored. Network shares are not supported for the database
-DB_DATA_LOCATION=./home/userapp/immich-app/postgres
+DB_DATA_LOCATION="/opt/immich-app/postgres"
 sudo mkdir -p $DB_DATA_LOCATION
 
-# The Immich version to use. You can pin this to a specific version like "v2.1.0"
-IMMICH_VERSION=v3
-
-# Connection secret for postgres. You should change it to a random password
-# Please use only the characters `A-Za-z0-9`, without special characters or spaces
-DB_PASSWORD=postgres
-
-# The values below this line do not need to be changed
-###################################################################################
-DB_USERNAME=postgres
-DB_DATABASE_NAME=immich
-
-### HERE
+# Changing the path of upload and db location 
+cd /opt/immich-app/
+sudo sed -i "s|^UPLOAD_LOCATION=.*|UPLOAD_LOCATION=$UPLOAD_LOCATION|" .env
+sudo sed -i "s|^DB_DATA_LOCATION=.*|DB_DATA_LOCATION=$DB_DATA_LOCATION|" .env
 
 ## start containers
 sudo docker compose up -d
