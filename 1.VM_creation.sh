@@ -40,7 +40,7 @@ create_VM(){
   --net0 virtio,bridge=$BRIDGE,firewall=1 \
   --ostype l26 \
   --scsihw virtio-scsi-pci \
-  --scsi0 local-lvm:16
+  --scsi0 local-lvm:26
 
   ### attaching ISO 
   qm set "$VMID" --cdrom local:iso/ubuntu-22.04.5-live-server-amd64.iso 
