@@ -6,11 +6,14 @@ set -e
 ## exit if there is unbound (unused) variable 
 set -u
 
+## show error in what line
+trap 'echo "Error in line $LINENO"' ERR
+
 ### Variables
 USERNAME="userapp"
 
 ### install vim
-sudo apt install vim
+#sudo apt install vim
 
 ## 1. User app creation
 ### install the ssh service
@@ -23,19 +26,29 @@ fi
 ### userapp creation
 if ! id "$USERNAME"; then
     echo "User $USERNAME cannot be found, creating it."
-    sudo adduser --disabled-password --gecos "" $USERNAME
+    sudo adduser --disabled-password --gecos "" "$USERNAME"
     sudo usermod -aG sudo $USERNAME
     sudo mkdir -p /home/$USERNAME/.ssh
     sudo chmod 700 /home/$USERNAME/.ssh
+    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME
 else
     echo "User $USERNAME already exits."
 fi
 
 ### userapp without asking for a password
-
-echo "$USERNAME ALL=(ALL) NOPASSWD: /usr/bin/docker" | sudo tee /etc/sudoers.d/$USERNAME
+echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/$USERNAME" >/dev/null
+sudo usermod -aG docker $USERNAME
 sudo chmod 0440 /etc/sudoers.d/$USERNAME
+### validation:
 sudo visudo -c -f /etc/sudoers.d/$USERNAME
+
+### removing loging via root via ssh
+sudo sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin no/' /etc/ssh/sshd_config
+sudo sshd -t || {
+    echo "SSH config is invalid. Check it."
+    exit 1
+}
+sudo systemctl restart ssh
 
 ### 2. Install docker + compose
 echo "Installing the docker now."
@@ -70,6 +83,7 @@ docker --version
 ## create a directory for immich
 echo "Now installing immich."
 sudo mkdir -p /opt/immich-app
+sudo chown -R "$USERNAME:$USERNAME" /opt/immich-app
 cd /opt/immich-app
 
 whoami
@@ -77,21 +91,21 @@ pwd
 ls -ld .
 
 ## Get docker-compose.yml file
-sudo wget -O docker-compose.yml https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
+[ -f docker-compose.yml ] || wget -O docker-compose.yml https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
 
 ## Get .env file
-sudo wget -O .env https://github.com/immich-app/immich/releases/latest/download/example.env
+[ -f .env ] || wget -O .env https://github.com/immich-app/immich/releases/latest/download/example.env
 
 
 # You can find documentation for all the supported env variables at https://docs.immich.app/install/environment-variables
 
 # The location where your uploaded files are stored
 UPLOAD_LOCATION="/opt/immich-app/library"
-sudo mkdir -p $UPLOAD_LOCATION
+sudo mkdir -p "$UPLOAD_LOCATION"
 
 # The location where your database files are stored. Network shares are not supported for the database
 DB_DATA_LOCATION="/opt/immich-app/postgres"
-sudo mkdir -p $DB_DATA_LOCATION
+sudo mkdir -p "$DB_DATA_LOCATION"
 
 # Changing the path of upload and db location 
 cd /opt/immich-app/
@@ -100,6 +114,3 @@ sudo sed -i "s|^DB_DATA_LOCATION=.*|DB_DATA_LOCATION=$DB_DATA_LOCATION|" .env
 
 ## start containers
 sudo docker compose up -d
-
-
-
