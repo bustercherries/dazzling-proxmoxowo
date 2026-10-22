@@ -42,6 +42,9 @@ create_VM(){
   --scsihw virtio-scsi-pci \
   --scsi0 local-lvm:26
 
+  ### setting cpu
+  qm set "$VMID" --cpu host
+
   ### attaching ISO 
   qm set "$VMID" --cdrom local:iso/ubuntu-22.04.5-live-server-amd64.iso 
   qm set "$VMID" --ide2 local:iso/ubuntu-22.04.5-live-server-amd64.iso,media=cdrom
@@ -67,6 +70,9 @@ echo "VM $VMID started. Please proceed with the installation via the Proxmox web
 
 ### after installation, detach ISO 
 #qm set "$VMID" --cdrom none
+### due to installation leaving half space free do:
+sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
 
 ### checking the status of newy created VM
 if qm status "$VMID" | grep -q "status: running"; then
@@ -75,3 +81,4 @@ else
   echo "VM with ID $VMID is not running, starting it now."
   qm start "$VMID"
 fi
+

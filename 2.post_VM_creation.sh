@@ -6,7 +6,6 @@ set -e
 ## exit if there is unbound (unused) variable 
 set -u
 
-: << 'COMMENT'
 ### Variables
 USERNAME="userapp"
 
@@ -63,7 +62,7 @@ sudo apt update
 
 # install docker packages
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-COMMENT
+
 # checking if docker has been installed
 docker --version
 
